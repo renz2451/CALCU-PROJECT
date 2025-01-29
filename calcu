@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyrics Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #111;
+            color: white;
+            flex-direction: column;
+        }
+        .calculator {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .display {
+            width: 100%;
+            padding: 20px;
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            background: #333;
+            border-radius: 10px;
+            min-height: 50px;
+            color: white;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .buttons button {
+            padding: 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .buttons button:hover {
+            background-color: #555;
+        }
+        .lyrics-container {
+            width: 100%;
+            height: 50px;
+            overflow: hidden;
+            position: relative;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .lyrics {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(10px); }
+            15% { opacity: 1; transform: translateY(0px); }
+            85% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lyrics-container">
+        <div class="lyrics" id="lyrics">Ready?</div>
+    </div>
+
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('(')">(</button>
+            <button onclick="appendToDisplay(')')">)</button>
+            <button onclick="appendToDisplay('/')">/</button>
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('*')">*</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('-')">-</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('+')">+</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="showLyrics()">=</button>
+        </div>
+    </div>
+
+    <!-- Add the audio file -->
+    <audio id="song">
+        <source src="song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const lyricsLines = [
+            "Ako'y alipin mo kahit hindi batid",
+            "Aaminin ko minsan ako'y manhid",
+            "Sana ay iyong naririnig",
+            "Sa 'yong yakap ako'y nasasabik",
+            "(End of Lyrics)"
+        ];
+        let currentLine = 0;
+
+        function appendToDisplay(value) {
+            let display = document.getElementById('display');
+            if (display.innerText === "0") {
+                display.innerText = value;
+            } else {
+                display.innerText += value;
+            }
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').innerText = "0";
+            document.getElementById('lyrics').innerText = "Ready?";
+            document.getElementById('lyrics').style.opacity = "1";
+            document.getElementById("song").pause();
+            document.getElementById("song").currentTime = 0;
+            currentLine = 0;
+        }
+
+        function showLyrics() {
+            let lyricsDiv = document.getElementById('lyrics');
+            let song = document.getElementById('song');
+
+            // Start the song
+            song.play();
+
+            lyricsDiv.innerText = lyricsLines[0];
+            lyricsDiv.style.opacity = "1";
+
+            let index = 0;
+            let interval = setInterval(() => {
+                if (index < lyricsLines.length) {
+                    lyricsDiv.innerText = lyricsLines[index];
+                    lyricsDiv.style.animation = "none";
+                    setTimeout(() => {
+                        lyricsDiv.style.animation = "fadeInOut 3.5s linear";
+                    }, 10);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 3500); // Sync lyrics every 3.5s like Spotify
+        }
+    </script>
+
+</body>
+</html>
