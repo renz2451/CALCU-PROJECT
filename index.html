@@ -34,6 +34,7 @@
             border-radius: 10px;
             min-height: 50px;
             color: white;
+            transition: opacity 0.3s ease-in-out;
         }
         .buttons {
             display: grid;
@@ -53,21 +54,6 @@
         .buttons button:hover {
             background-color: #555;
         }
-        .lyrics-container {
-            width: 100%;
-            height: 50px;
-            overflow: hidden;
-            position: relative;
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .lyrics {
-            position: absolute;
-            width: 100%;
-            opacity: 0;
-        }
         @keyframes fadeInOut {
             0% { opacity: 0; transform: translateY(10px); }
             15% { opacity: 1; transform: translateY(0px); }
@@ -77,10 +63,6 @@
     </style>
 </head>
 <body>
-
-    <div class="lyrics-container">
-        <div class="lyrics" id="lyrics">Ready?</div>
-    </div>
 
     <div class="calculator">
         <div class="display" id="display">0</div>
@@ -107,9 +89,9 @@
         </div>
     </div>
 
-    <!-- Add the audio file -->
-    <audio id="song">
-        <source src="song.mp3" type="audio/mpeg">
+    <!-- Use Your Google Drive Hosted MP3 -->
+    <audio id="song" preload="auto">
+        <source src="https://www.dropbox.com/scl/fi/8ml8ji46f46iwf378wene/spotify-Bulong-December-Avenue.m4a?rlkey=w3dvs5qcumdis2j83kas8omor&st=6g231ml7&raw=1" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -119,6 +101,7 @@
             "Aaminin ko minsan ako'y manhid",
             "Sana ay iyong naririnig",
             "Sa 'yong yakap ako'y nasasabik",
+            "(End of Lyrics)"
         ];
         let currentLine = 0;
 
@@ -133,30 +116,28 @@
 
         function clearDisplay() {
             document.getElementById('display').innerText = "0";
-            document.getElementById('lyrics').innerText = "Ready?";
-            document.getElementById('lyrics').style.opacity = "1";
+            document.getElementById('display').style.opacity = "1";
             document.getElementById("song").pause();
             document.getElementById("song").currentTime = 0;
             currentLine = 0;
         }
 
         function showLyrics() {
-            let lyricsDiv = document.getElementById('lyrics');
+            let display = document.getElementById('display');
             let song = document.getElementById('song');
 
             // Start the song
             song.play();
 
-            lyricsDiv.innerText = lyricsLines[0];
-            lyricsDiv.style.opacity = "1";
+            display.innerText = lyricsLines[0];
 
             let index = 0;
             let interval = setInterval(() => {
                 if (index < lyricsLines.length) {
-                    lyricsDiv.innerText = lyricsLines[index];
-                    lyricsDiv.style.animation = "none";
+                    display.innerText = lyricsLines[index];
+                    display.style.animation = "none";
                     setTimeout(() => {
-                        lyricsDiv.style.animation = "fadeInOut 3.5s linear";
+                        display.style.animation = "fadeInOut 3.5s linear";
                     }, 10);
                     index++;
                 } else {
